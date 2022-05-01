@@ -16,7 +16,7 @@ const newsApiService = new NewCountries();
 refs.searchbox.addEventListener(
   'input',
   debounce(() => {
-    newsApiService.query = refs.searchbox.value;
+    newsApiService.query = refs.searchbox.value.trim();
 
     if (newsApiService.query === '') {
       refs.countryInfo.innerHTML = '';
@@ -24,7 +24,7 @@ refs.searchbox.addEventListener(
       return;
     }
 
-    newsApiService.fetchCountries(newsApiService.query.trim()).then(showCountries).catch(showError);
+    newsApiService.fetchCountries(newsApiService.query).then(showCountries).catch(showError);
   }, DEBOUNCE_DELAY),
 );
 
@@ -43,7 +43,9 @@ function showCountries(countriesData) {
   if (countriesData.length > 10) {
     showManyCountries();
     return;
-  } else if (countriesData.length >= 2 && countriesData.length <= 10) {
+  }
+
+  if (countriesData.length >= 2 && countriesData.length <= 10) {
     refs.countryList.innerHTML = countriesData
       .map(con => {
         return `
